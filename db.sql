@@ -65,4 +65,8 @@ CREATE SEQUENCE assure.fund_id_seq START WITH 1 INCREMENT BY 1;
 -- Set the default value for the 'fund_id' column to the next value in the sequence
 ALTER TABLE assure.funds ALTER COLUMN fund_id SET DEFAULT nextval('assure.fund_id_seq');
 
-GRANT ALL PRIVILEGES ON employees, manufacturers, suppliers, inventory TO assure;
+GRANT ALL PRIVILEGES ON TABLE assure.inventory TO assure;
+GRANT ALL PRIVILEGES ON TABLE assure.funds TO assure;
+GRANT ALL PRIVILEGES ON TABLE assure.time_records TO assure;
+GRANT ALL PRIVILEGES ON TABLE assure.employees TO assure;
+
