@@ -1,55 +1,68 @@
+-- Create the database
 CREATE DATABASE assure;
 
-CREATE USER assure WITH encrypted PASSWORD 'testing';
+-- Use the database
+USE assure;
 
-GRANT ALL PRIVILEGES ON DATABASE assure TO assure;
+-- Create the user 'assure' with password 'testing'
+CREATE USER 'assure'@'localhost' IDENTIFIED BY 'testing';
 
-CREATE TABLE employees (
-  employee_id     INTEGER NOT NULL,
-  first_name      VARCHAR(128) NOT NULL,
-  last_name       VARCHAR(128) NOT NULL,
-  email           VARCHAR(256) NOT NULL,
-  phone_number    VARCHAR(16) NOT NULL,
-  hire_date       DATE NOT NULL,
-  job_title       VARCHAR(128) NOT NULL,
-  salary          NUMERIC(10, 2) NOT NULL,
-  department      VARCHAR(128) NOT NULL,
-  PRIMARY KEY ( employee_id )
+-- Grant all privileges to the user 'assure'
+GRANT ALL PRIVILEGES ON assure.* TO 'assure'@'localhost';
+CREATE SCHEMA assure;
+
+-- Create the 'inventory' table in the 'assure' schema
+CREATE TABLE assure.inventory (
+  inventory_id INT NOT NULL,
+  item_name VARCHAR(50) NOT NULL,
+  quantity INT NOT NULL,
+  price DECIMAL(10,2) NOT NULL,
+  PRIMARY KEY (inventory_id)
 );
 
-CREATE TABLE manufacturers (
-  manufacturer_id INTEGER NOT NULL,
-  name            VARCHAR(128) NOT NULL,
-  street_address  VARCHAR(256) NOT NULL,
-  city            VARCHAR(64) NOT NULL,
-  state           VARCHAR(32) NOT NULL,
-  zip             VARCHAR(16) NOT NULL,
-  phone           VARCHAR(16) NOT NULL,
-  PRIMARY KEY     ( manufacturer_id )
+-- Create the sequence for the 'inventory_id' column in the 'assure' schema
+CREATE SEQUENCE assure.inventory_id_seq START WITH 1 INCREMENT BY 1;
+-- Set the default value for the 'inventory_id' column to the next value in the sequence
+ALTER TABLE assure.inventory ALTER COLUMN inventory_id SET DEFAULT nextval('assure.inventory_id_seq');
+
+-- Create the 'employees' table in the 'assure' schema
+CREATE TABLE assure.employees (
+  employee_id INT NOT NULL,
+  employee_name VARCHAR(50) NOT NULL,
+  hourly_rate DECIMAL(10,2) NOT NULL,
+  PRIMARY KEY (employee_id)
 );
 
-CREATE TABLE suppliers (
-  supplier_id     INTEGER NOT NULL,
-  name            VARCHAR(128) NOT NULL,
-  street_address  VARCHAR(256) NOT NULL,
-  city            VARCHAR(64) NOT NULL,
-  state           VARCHAR(32) NOT NULL,
-  zip             VARCHAR(16) NOT NULL,
-  phone           VARCHAR(16) NOT NULL,
-  PRIMARY KEY     ( supplier_id )
+-- Create a sequence for the 'employee_id' column
+CREATE SEQUENCE assure.employee_id_seq START WITH 1 INCREMENT BY 1;
+-- Set the default value for the 'employee_id' column to the next value in the sequence
+ALTER TABLE assure.employees ALTER COLUMN employee_id SET DEFAULT nextval('assure.employee_id_seq');
+
+-- Create the 'time_records' table in the 'assure' schema
+CREATE TABLE assure.time_records (
+  time_record_id INT NOT NULL,
+  employee_id INT NOT NULL,
+  date DATE NOT NULL,
+  hours_worked DECIMAL(10,2) NOT NULL,
+  PRIMARY KEY (time_record_id),
+  FOREIGN KEY (employee_id) REFERENCES assure.employees(employee_id)
 );
 
-CREATE TABLE inventory (
-  product_id      INTEGER NOT NULL,
-  name            VARCHAR(128) NOT NULL,
-  description     TEXT NOT NULL,
-  manufacturer_id INTEGER NOT NULL,
-  supplier_id     INTEGER NOT NULL,
-  quantity        INTEGER NOT NULL,
-  price           NUMERIC(10, 2) NOT NULL,
-  PRIMARY KEY ( product_id ),
-  CONSTRAINT fk_manufacturer FOREIGN KEY (manufacturer_id) REFERENCES manufacturers(manufacturer_id),
-  CONSTRAINT fk_supplier FOREIGN KEY (supplier_id) REFERENCES suppliers(supplier_id)
+-- Create a sequence for the 'time_record_id' column
+CREATE SEQUENCE assure.time_record_id_seq START WITH 1 INCREMENT BY 1;
+-- Set the default value for the 'time_record_id' column to the next value in the sequence
+ALTER TABLE assure.time_records ALTER COLUMN time_record_id SET DEFAULT nextval('assure.time_record_id_seq');
+
+-- Create the 'funds' table in the 'assure' schema
+CREATE TABLE assure.funds (
+  fund_id INT NOT NULL,
+  amount DECIMAL(10,2) NOT NULL,
+  PRIMARY KEY (fund_id)
 );
+
+-- Create a sequence for the 'fund_id' column
+CREATE SEQUENCE assure.fund_id_seq START WITH 1 INCREMENT BY 1;
+-- Set the default value for the 'fund_id' column to the next value in the sequence
+ALTER TABLE assure.funds ALTER COLUMN fund_id SET DEFAULT nextval('assure.fund_id_seq');
 
 GRANT ALL PRIVILEGES ON employees, manufacturers, suppliers, inventory TO assure;
