@@ -1,8 +1,8 @@
 // Set up the database
-db = db.getSiblingDB("final");
+db = db.getSiblingDB("assuretech");
 
 // Create the Customers collection with schema validation
-db.createCollection("Customers", {
+db.createCollection("customers", {
   validator: {
     $jsonSchema: {
       bsonType: "object",
@@ -48,5 +48,5 @@ db.createCollection("Customers", {
 });
 
 // Create the Products and Orders collections without schema validation
-db.createCollection("School");
-db.createCollection("State");
+db.createCollection("products");
+db.createCollection("orders");
